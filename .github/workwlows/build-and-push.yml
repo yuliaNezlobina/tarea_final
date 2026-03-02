@@ -1,0 +1,34 @@
+name: Build & Push
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - test
+
+jobs:
+  build-and-push:
+    runs-on: self-hosted
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Login en Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: yulianzl
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build & Push de la imagen
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: yulianzl/yulia.nezlobina_daw-web:latest
+
+      - name: Ejecutar
+        run: |
+          docker stop daw-web || true
+          docker rm daw-web || true
+          docker run -d -p 8888:80 --name daw-web yulianzl/yulia.nezlobina_daw-web:latest
