@@ -27,8 +27,9 @@ jobs:
           tags: yulianzl/yulia.nezlobina_daw-web:latest
 
       - name: Ejecutar
+        shell: powershell
         run: |
           docker stop daw-web 
           docker rm daw-web
           docker run -d -p 8888:80 --name daw-web yulianzl/yulia.nezlobina_daw-web:latest
-       shell: powershell
+      
